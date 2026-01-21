@@ -1,0 +1,846 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Delivery App UX/UI Design System & Development Spec</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Prompt:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        :root {
+            --color-primary: #22C55E;
+            --color-secondary: #F97316;
+            --color-accent: #3B82F6;
+            --color-success: #10B981;
+            --color-warning: #F59E0B;
+            --color-error: #EF4444;
+            --color-neutral-900: #1F2937;
+            --color-neutral-600: #475569;
+            --color-neutral-100: #F1F5F9;
+            --color-bg-primary: #FFFFFF;
+            --color-bg-secondary: #F8FAFC;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            min-height: 100vh;
+        }
+
+        .thai-font {
+            font-family: 'Prompt', sans-serif;
+        }
+
+        .hero-gradient {
+            background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%);
+        }
+
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+
+        .card-hover:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-link {
+            transition: all 0.2s ease;
+        }
+
+        .nav-link:hover {
+            color: var(--color-primary);
+            transform: translateX(4px);
+        }
+
+        .section-divider {
+            height: 2px;
+            background: linear-gradient(90deg, var(--color-primary), var(--color-secondary));
+            margin: 3rem 0;
+        }
+
+        .mockup-container {
+            background: linear-gradient(145deg, #f1f5f9, #e2e8f0);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .download-btn {
+            background: linear-gradient(135deg, var(--color-primary), var(--color-success));
+            transition: all 0.3s ease;
+        }
+
+        .download-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(34, 197, 94, 0.3);
+        }
+
+        .role-badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .role-customer { background: #dcfce7; color: #166534; }
+        .role-driver { background: #dbeafe; color: #1e40af; }
+        .role-merchant { background: #fef3c7; color: #92400e; }
+        .role-admin { background: #f3e8ff; color: #7c3aed; }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .timeline-item {
+            position: relative;
+            padding-left: 2rem;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0.5rem;
+            width: 12px;
+            height: 12px;
+            background: var(--color-primary);
+            border-radius: 50%;
+        }
+
+        .timeline-item::after {
+            content: '';
+            position: absolute;
+            left: 5px;
+            top: 1.25rem;
+            width: 2px;
+            height: calc(100% - 1rem);
+            background: #e2e8f0;
+        }
+
+        .timeline-item:last-child::after {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="bg-white shadow-lg sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center space-x-3">
+                    <i class="fas fa-utensils text-2xl" style="color: var(--color-primary);"></i>
+                    <span class="thai-font font-bold text-xl" style="color: var(--color-neutral-900);">
+                        Delivery App Design System
+                    </span>
+                </div>
+                <div class="hidden md:flex space-x-8">
+                    <a href="#overview" class="nav-link text-gray-600 hover:text-gray-900">ภาพรวม</a>
+                    <a href="#design-system" class="nav-link text-gray-600 hover:text-gray-900">Design System</a>
+                    <a href="#mockups" class="nav-link text-gray-600 hover:text-gray-900">Mockups</a>
+                    <a href="#prototypes" class="nav-link text-gray-600 hover:text-gray-900">Prototypes</a>
+                    <a href="#user-stories" class="nav-link text-gray-600 hover:text-gray-900">User Stories</a>
+                    <a href="#deliverables" class="nav-link text-gray-600 hover:text-gray-900">Downloads</a>
+                </div>
+                <button class="md:hidden">
+                    <i class="fas fa-bars text-gray-600"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="overview" class="hero-gradient text-white py-20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h1 class="thai-font text-4xl md:text-6xl font-bold mb-6">
+                ระบบออกแบบแอปเดลิเวอรี่ครบวงจร
+            </h1>
+            <p class="text-xl md:text-2xl mb-8 opacity-90">
+                Design System, Visual Mockups, Prototypes & User Stories
+                <br>สำหรับแอปเดลิเวอรี่ 4 บทบาท
+            </p>
+            <div class="flex flex-wrap justify-center gap-4 mb-12">
+                <a href="customer.html" target="_blank" class="role-badge role-customer hover:opacity-80 transition cursor-pointer flex items-center">
+                    <i class="fas fa-utensils mr-2"></i> Launch Customer App
+                </a>
+                <a href="driver.html" target="_blank" class="role-badge role-driver hover:opacity-80 transition cursor-pointer flex items-center">
+                    <i class="fas fa-motorcycle mr-2"></i> Launch Driver App
+                </a>
+                <a href="merchant.html" target="_blank" class="role-badge role-merchant hover:opacity-80 transition cursor-pointer flex items-center">
+                    <i class="fas fa-store mr-2"></i> Launch Merchant App
+                </a>
+                <a href="admin.html" target="_blank" class="role-badge role-admin hover:opacity-80 transition cursor-pointer flex items-center">
+                    <i class="fas fa-chart-line mr-2"></i> Launch Admin Dashboard
+                </a>
+            </div>
+
+            <div class="bg-white/10 backdrop-blur-md rounded-xl p-6 mb-12 max-w-3xl mx-auto border border-white/20">
+                <h3 class="font-bold text-xl mb-2 text-white"><i class="fas fa-rocket mr-2"></i> Live Demo Ready!</h3>
+                <p class="text-white/80 mb-4">
+                    ระบบพร้อมใช้งานแล้ว! คุณสามารถทดลองสั่งอาหารจริงได้โดยคลิกที่ปุ่มด้านบน
+                    <br>เปิด 4 แท็บเพื่อจำลองสถานการณ์จริง: ลูกค้าสั่ง -> ร้านรับ -> ไรเดอร์ส่ง -> แอดมินดู
+                </p>
+                <div class="flex justify-center gap-4 text-sm">
+                    <div class="bg-black/20 px-3 py-1 rounded-full"><span class="text-green-300">1.</span> ลูกค้าสั่งอาหาร</div>
+                    <div class="bg-black/20 px-3 py-1 rounded-full"><span class="text-orange-300">2.</span> ร้านค้ารับออร์เดอร์</div>
+                    <div class="bg-black/20 px-3 py-1 rounded-full"><span class="text-blue-300">3.</span> ไรเดอร์จัดส่ง</div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mt-12">
+                <div class="bg-white bg-opacity-20 rounded-lg p-6">
+                    <i class="fas fa-palette text-3xl mb-4"></i>
+                    <h3 class="font-semibold mb-2">Design System</h3>
+                    <p class="text-sm opacity-80">ระบบออกแบบครบถ้วน</p>
+                </div>
+                <div class="bg-white bg-opacity-20 rounded-lg p-6">
+                    <i class="fas fa-mobile-alt text-3xl mb-4"></i>
+                    <h3 class="font-semibold mb-2">Hi-fi Mockups</h3>
+                    <p class="text-sm opacity-80">ภาพ UI สมจริง</p>
+                </div>
+                <div class="bg-white bg-opacity-20 rounded-lg p-6">
+                    <i class="fas fa-sitemap text-3xl mb-4"></i>
+                    <h3 class="font-semibold mb-2">User Flows</h3>
+                    <p class="text-sm opacity-80">แผนผังการใช้งาน</p>
+                </div>
+                <div class="bg-white bg-opacity-20 rounded-lg p-6">
+                    <i class="fas fa-clipboard-list text-3xl mb-4"></i>
+                    <h3 class="font-semibold mb-2">User Stories</h3>
+                    <p class="text-sm opacity-80">คำสั่งการพัฒนา</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Design System Section -->
+    <section id="design-system" class="py-20 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="thai-font text-4xl font-bold mb-6" style="color: var(--color-neutral-900);">
+                    Design System & Tokens
+                </h2>
+                <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+                    ระบบออกแบบที่ครบถ้วนพร้อม Design Tokens สำหรับการพัฒนาแบบมีมาตรฐาน
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-16">
+                <div class="card-hover bg-gray-50 rounded-2xl p-8">
+                    <h3 class="thai-font text-2xl font-semibold mb-6" style="color: var(--color-primary);">
+                        <i class="fas fa-paint-brush mr-3"></i>Color Palette
+                    </h3>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-8 h-8 rounded-full" style="background: #22C55E;"></div>
+                            <span class="text-sm">Primary Green</span>
+                        </div>
+                        <div class="flex items-center space-x-3">
+                            <div class="w-8 h-8 rounded-full" style="background: #F97316;"></div>
+                            <span class="text-sm">Secondary Orange</span>
+                        </div>
+                        <div class="flex items-center space-x-3">
+                            <div class="w-8 h-8 rounded-full" style="background: #3B82F6;"></div>
+                            <span class="text-sm">Accent Blue</span>
+                        </div>
+                        <div class="flex items-center space-x-3">
+                            <div class="w-8 h-8 rounded-full" style="background: #1F2937;"></div>
+                            <span class="text-sm">Neutral Dark</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card-hover bg-gray-50 rounded-2xl p-8">
+                    <h3 class="thai-font text-2xl font-semibold mb-6" style="color: var(--color-secondary);">
+                        <i class="fas fa-font mr-3"></i>Typography
+                    </h3>
+                    <div class="space-y-4">
+                        <div>
+                            <span class="text-xs text-gray-500">Display Font</span>
+                            <p class="thai-font text-lg font-semibold">Prompt - สำหรับหัวข้อภาษาไทย</p>
+                        </div>
+                        <div>
+                            <span class="text-xs text-gray-500">Body Font</span>
+                            <p class="text-lg font-semibold">Inter - สำหรับเนื้อหาและ UI</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-center">
+                <h3 class="thai-font text-2xl font-semibold mb-8" style="color: var(--color-neutral-900);">
+                    Design Tokens (Ready for Development)
+                </h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="bg-gradient-to-br from-green-50 to-green-100 rounded-xl p-6">
+                        <i class="fas fa-code text-3xl mb-4" style="color: var(--color-primary);"></i>
+                        <h4 class="font-semibold mb-2">CSS Variables</h4>
+                        <p class="text-sm text-gray-600">พร้อมใช้งานทันทีใน CSS</p>
+                    </div>
+                    <div class="bg-gradient-to-br from-orange-50 to-orange-100 rounded-xl p-6">
+                        <i class="fas fa-cog text-3xl mb-4" style="color: var(--color-secondary);"></i>
+                        <h4 class="font-semibold mb-2">JSON Tokens</h4>
+                        <p class="text-sm text-gray-600">สำหรับการพัฒนา cross-platform</p>
+                    </div>
+                    <div class="bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl p-6">
+                        <i class="fas fa-mobile-alt text-3xl mb-4" style="color: var(--color-accent);"></i>
+                        <h4 class="font-semibold mb-2">Responsive Design</h4>
+                        <p class="text-sm text-gray-600">รองรับทุกอุปกรณ์</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Mockups Section -->
+    <section id="mockups" class="py-20 bg-gray-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="thai-font text-4xl font-bold mb-6" style="color: var(--color-neutral-900);">
+                    Hi-fi Visual Mockups
+                </h2>
+                <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+                    ภาพ UI สมจริงสำหรับแต่ละบทบาท พร้อมการออกแบบที่สวยงามและใช้งานง่าย
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                <!-- Customer App Mockup -->
+                <div class="mockup-container">
+                    <div class="flex items-center mb-6">
+                        <span class="role-badge role-customer mr-3">Customer</span>
+                        <h3 class="thai-font text-xl font-semibold">แอปลูกค้า</h3>
+                    </div>
+                    <div class="bg-white rounded-2xl p-4 shadow-lg">
+                        <img src="customer-app-mockup.png" alt="Customer App Mockup"
+                             class="w-full h-auto rounded-lg">
+                    </div>
+                    <div class="mt-6">
+                        <h4 class="font-semibold mb-3">Key Features:</h4>
+                        <ul class="text-sm text-gray-600 space-y-2">
+                            <li><i class="fas fa-check text-green-500 mr-2"></i>ค้นหาและเลือกร้านอาหาร</li>
+                            <li><i class="fas fa-check text-green-500 mr-2"></i>เรียกดูเมนูพร้อมรูปภาพ</li>
+                            <li><i class="fas fa-check text-green-500 mr-2"></i>ตะกร้าสินค้าและชำระเงิน</li>
+                            <li><i class="fas fa-check text-green-500 mr-2"></i>ติดตามการจัดส่งแบบ real-time</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Driver App Mockup -->
+                <div class="mockup-container">
+                    <div class="flex items-center mb-6">
+                        <span class="role-badge role-driver mr-3">Driver</span>
+                        <h3 class="thai-font text-xl font-semibold">แอปคนขับ</h3>
+                    </div>
+                    <div class="bg-white rounded-2xl p-4 shadow-lg">
+                        <img src="driver-app-mockup.png" alt="Driver App Mockup"
+                             class="w-full h-auto rounded-lg">
+                    </div>
+                    <div class="mt-6">
+                        <h4 class="font-semibold mb-3">Key Features:</h4>
+                        <ul class="text-sm text-gray-600 space-y-2">
+                            <li><i class="fas fa-check text-green-500 mr-2"></i>รับออร์เดอร์และนำทาง</li>
+                            <li><i class="fas fa-check text-green-500 mr-2"></i>แผนที่แบบ real-time</li>
+                            <li><i class="fas fa-check text-green-500 mr-2"></i>ระบบคำนวณรายได้</li>
+                            <li><i class="fas fa-check text-green-500 mr-2"></i>ประวัติการทำงาน</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Merchant App Mockup -->
+                <div class="mockup-container">
+                    <div class="flex items-center mb-6">
+                        <span class="role-badge role-merchant mr-3">Merchant</span>
+                        <h3 class="thai-font text-xl font-semibold">แอปร้านค้า</h3>
+                    </div>
+                    <div class="bg-white rounded-2xl p-4 shadow-lg">
+                        <img src="merchant-app-mockup.png" alt="Merchant App Mockup"
+                             class="w-full h-auto rounded-lg">
+                    </div>
+                    <div class="mt-6">
+                        <h4 class="font-semibold mb-3">Key Features:</h4>
+                        <ul class="text-sm text-gray-600 space-y-2">
+                            <li><i class="fas fa-check text-green-500 mr-2"></i>จัดการออร์เดอร์</li>
+                            <li><i class="fas fa-check text-green-500 mr-2"></i>จัดการเมนูและราคา</li>
+                            <li><i class="fas fa-check text-green-500 mr-2"></i>ติดตามยอดขาย</li>
+                            <li><i class="fas fa-check text-green-500 mr-2"></i>จัดการสต็อกสินค้า</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Admin Dashboard Mockup -->
+                <div class="mockup-container">
+                    <div class="flex items-center mb-6">
+                        <span class="role-badge role-admin mr-3">Admin</span>
+                        <h3 class="thai-font text-xl font-semibold">แดชบอร์ดแอดมิน</h3>
+                    </div>
+                    <div class="bg-white rounded-2xl p-4 shadow-lg">
+                        <img src="admin-dashboard-mockup.png" alt="Admin Dashboard Mockup"
+                             class="w-full h-auto rounded-lg">
+                    </div>
+                    <div class="mt-6">
+                        <h4 class="font-semibold mb-3">Key Features:</h4>
+                        <ul class="text-sm text-gray-600 space-y-2">
+                            <li><i class="fas fa-check text-green-500 mr-2"></i>วิเคราะห์ข้อมูลระบบ</li>
+                            <li><i class="fas fa-check text-green-500 mr-2"></i>จัดการผู้ใช้ทุกบทบาท</li>
+                            <li><i class="fas fa-check text-green-500 mr-2"></i>ติดตามออร์เดอร์ทั้งหมด</li>
+                            <li><i class="fas fa-check text-green-500 mr-2"></i>จัดการการตั้งค่าระบบ</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Prototypes Section -->
+    <section id="prototypes" class="py-20 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="thai-font text-4xl font-bold mb-6" style="color: var(--color-neutral-900);">
+                    Low-fi User Flow Prototypes
+                </h2>
+                <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+                    แผนผังการใช้งาน (User Flow) แบบ wireframe สำหรับการวางแผนและทดสอบประสบการณ์ผู้ใช้
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                <!-- Customer User Flow -->
+                <div class="bg-gray-50 rounded-2xl p-8">
+                    <div class="flex items-center mb-6">
+                        <span class="role-badge role-customer mr-3">Customer Flow</span>
+                    </div>
+                    <div class="bg-white rounded-xl p-4 shadow-sm">
+                        <img src="customer-user-flow.png" alt="Customer User Flow"
+                             class="w-full h-auto rounded-lg">
+                    </div>
+                    <div class="mt-6">
+                        <h4 class="font-semibold mb-3">User Journey:</h4>
+                        <div class="timeline-item">
+                            <p class="text-sm font-medium">ค้นหาร้านอาหาร</p>
+                        </div>
+                        <div class="timeline-item">
+                            <p class="text-sm font-medium">เลือกเมนู</p>
+                        </div>
+                        <div class="timeline-item">
+                            <p class="text-sm font-medium">ชำระเงิน</p>
+                        </div>
+                        <div class="timeline-item">
+                            <p class="text-sm font-medium">ติดตามการจัดส่ง</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Driver User Flow -->
+                <div class="bg-gray-50 rounded-2xl p-8">
+                    <div class="flex items-center mb-6">
+                        <span class="role-badge role-driver mr-3">Driver Flow</span>
+                    </div>
+                    <div class="bg-white rounded-xl p-4 shadow-sm">
+                        <img src="driver-user-flow.png" alt="Driver User Flow"
+                             class="w-full h-auto rounded-lg">
+                    </div>
+                    <div class="mt-6">
+                        <h4 class="font-semibold mb-3">User Journey:</h4>
+                        <div class="timeline-item">
+                            <p class="text-sm font-medium">รับออร์เดอร์</p>
+                        </div>
+                        <div class="timeline-item">
+                            <p class="text-sm font-medium">ไปรับอาหาร</p>
+                        </div>
+                        <div class="timeline-item">
+                            <p class="text-sm font-medium">จัดส่งให้ลูกค้า</p>
+                        </div>
+                        <div class="timeline-item">
+                            <p class="text-sm font-medium">ยืนยันการส่ง</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Merchant User Flow -->
+                <div class="bg-gray-50 rounded-2xl p-8">
+                    <div class="flex items-center mb-6">
+                        <span class="role-badge role-merchant mr-3">Merchant Flow</span>
+                    </div>
+                    <div class="bg-white rounded-xl p-4 shadow-sm">
+                        <img src="merchant-user-flow.png" alt="Merchant User Flow"
+                             class="w-full h-auto rounded-lg">
+                    </div>
+                    <div class="mt-6">
+                        <h4 class="font-semibold mb-3">User Journey:</h4>
+                        <div class="timeline-item">
+                            <p class="text-sm font-medium">รับออร์เดอร์ใหม่</p>
+                        </div>
+                        <div class="timeline-item">
+                            <p class="text-sm font-medium">เตรียมอาหาร</p>
+                        </div>
+                        <div class="timeline-item">
+                            <p class="text-sm font-medium">พร้อมจัดส่ง</p>
+                        </div>
+                        <div class="timeline-item">
+                            <p class="text-sm font-medium">อัพเดทสถานะ</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Admin User Flow -->
+                <div class="bg-gray-50 rounded-2xl p-8">
+                    <div class="flex items-center mb-6">
+                        <span class="role-badge role-admin mr-3">Admin Flow</span>
+                    </div>
+                    <div class="bg-white rounded-xl p-4 shadow-sm">
+                        <img src="admin-user-flow.png" alt="Admin User Flow"
+                             class="w-full h-auto rounded-lg">
+                    </div>
+                    <div class="mt-6">
+                        <h4 class="font-semibold mb-3">User Journey:</h4>
+                        <div class="timeline-item">
+                            <p class="text-sm font-medium">Monitor ระบบ</p>
+                        </div>
+                        <div class="timeline-item">
+                            <p class="text-sm font-medium">จัดการผู้ใช้</p>
+                        </div>
+                        <div class="timeline-item">
+                            <p class="text-sm font-medium">วิเคราะห์ข้อมูล</p>
+                        </div>
+                        <div class="timeline-item">
+                            <p class="text-sm font-medium">จัดการการตั้งค่า</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- User Stories Section -->
+    <section id="user-stories" class="py-20 bg-gray-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="thai-font text-4xl font-bold mb-6" style="color: var(--color-neutral-900);">
+                    User Stories & Development Spec
+                </h2>
+                <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+                    คำสั่งการพัฒนาพร้อม Acceptance Criteria สำหรับทีม Developer
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <!-- Customer Stories -->
+                <div class="bg-white rounded-2xl p-8 shadow-sm">
+                    <div class="flex items-center mb-6">
+                        <span class="role-badge role-customer mr-3">Customer</span>
+                        <h3 class="thai-font text-xl font-semibold">User Stories</h3>
+                    </div>
+                    <div class="space-y-4">
+                        <div class="border-l-4 border-green-500 pl-4">
+                            <h4 class="font-semibold text-sm">ค้นหาและเลือกร้านอาหาร</h4>
+                            <p class="text-xs text-gray-600 mt-1">Priority: High | Estimation: 8 points</p>
+                        </div>
+                        <div class="border-l-4 border-green-500 pl-4">
+                            <h4 class="font-semibold text-sm">เรียกดูเมนูและสั่งอาหาร</h4>
+                            <p class="text-xs text-gray-600 mt-1">Priority: High | Estimation: 8 points</p>
+                        </div>
+                        <div class="border-l-4 border-green-500 pl-4">
+                            <h4 class="font-semibold text-sm">ชำระเงินและยืนยันการสั่ง</h4>
+                            <p class="text-xs text-gray-600 mt-1">Priority: High | Estimation: 13 points</p>
+                        </div>
+                        <div class="border-l-4 border-green-500 pl-4">
+                            <h4 class="font-semibold text-sm">ติดตามการจัดส่ง</h4>
+                            <p class="text-xs text-gray-600 mt-1">Priority: High | Estimation: 13 points</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Driver Stories -->
+                <div class="bg-white rounded-2xl p-8 shadow-sm">
+                    <div class="flex items-center mb-6">
+                        <span class="role-badge role-driver mr-3">Driver</span>
+                        <h3 class="thai-font text-xl font-semibold">User Stories</h3>
+                    </div>
+                    <div class="space-y-4">
+                        <div class="border-l-4 border-blue-500 pl-4">
+                            <h4 class="font-semibold text-sm">รับออร์เดอร์ใหม่</h4>
+                            <p class="text-xs text-gray-600 mt-1">Priority: High | Estimation: 8 points</p>
+                        </div>
+                        <div class="border-l-4 border-blue-500 pl-4">
+                            <h4 class="font-semibold text-sm">นำทางไปยังร้านค้าและลูกค้า</h4>
+                            <p class="text-xs text-gray-600 mt-1">Priority: High | Estimation: 8 points</p>
+                        </div>
+                        <div class="border-l-4 border-blue-500 pl-4">
+                            <h4 class="font-semibold text-sm">ยืนยันการรับและส่งมอบ</h4>
+                            <p class="text-xs text-gray-600 mt-1">Priority: High | Estimation: 8 points</p>
+                        </div>
+                        <div class="border-l-4 border-blue-500 pl-4">
+                            <h4 class="font-semibold text-sm">จัดการรายได้และประวัติ</h4>
+                            <p class="text-xs text-gray-600 mt-1">Priority: Medium | Estimation: 5 points</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Merchant Stories -->
+                <div class="bg-white rounded-2xl p-8 shadow-sm">
+                    <div class="flex items-center mb-6">
+                        <span class="role-badge role-merchant mr-3">Merchant</span>
+                        <h3 class="thai-font text-xl font-semibold">User Stories</h3>
+                    </div>
+                    <div class="space-y-4">
+                        <div class="border-l-4 border-yellow-500 pl-4">
+                            <h4 class="font-semibold text-sm">รับและจัดการออร์เดอร์</h4>
+                            <p class="text-xs text-gray-600 mt-1">Priority: High | Estimation: 8 points</p>
+                        </div>
+                        <div class="border-l-4 border-yellow-500 pl-4">
+                            <h4 class="font-semibold text-sm">จัดการเมนูและราคา</h4>
+                            <p class="text-xs text-gray-600 mt-1">Priority: High | Estimation: 8 points</p>
+                        </div>
+                        <div class="border-l-4 border-yellow-500 pl-4">
+                            <h4 class="font-semibold text-sm">ติดตามยอดขายและรายได้</h4>
+                            <p class="text-xs text-gray-600 mt-1">Priority: Medium | Estimation: 5 points</p>
+                        </div>
+                        <div class="border-l-4 border-yellow-500 pl-4">
+                            <h4 class="font-semibold text-sm">จัดการสต็อกวัตถุดิบ</h4>
+                            <p class="text-xs text-gray-600 mt-1">Priority: Low | Estimation: 3 points</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Admin Stories -->
+                <div class="bg-white rounded-2xl p-8 shadow-sm">
+                    <div class="flex items-center mb-6">
+                        <span class="role-badge role-admin mr-3">Admin</span>
+                        <h3 class="thai-font text-xl font-semibold">User Stories</h3>
+                    </div>
+                    <div class="space-y-4">
+                        <div class="border-l-4 border-purple-500 pl-4">
+                            <h4 class="font-semibold text-sm">จัดการผู้ใช้ทุกบทบาท</h4>
+                            <p class="text-xs text-gray-600 mt-1">Priority: High | Estimation: 8 points</p>
+                        </div>
+                        <div class="border-l-4 border-purple-500 pl-4">
+                            <h4 class="font-semibold text-sm">ติดตามออร์เดอร์ทั้งหมด</h4>
+                            <p class="text-xs text-gray-600 mt-1">Priority: High | Estimation: 8 points</p>
+                        </div>
+                        <div class="border-l-4 border-purple-500 pl-4">
+                            <h4 class="font-semibold text-sm">วิเคราะห์ข้อมูลระบบ</h4>
+                            <p class="text-xs text-gray-600 mt-1">Priority: Medium | Estimation: 5 points</p>
+                        </div>
+                        <div class="border-l-4 border-purple-500 pl-4">
+                            <h4 class="font-semibold text-sm">จัดการระบบและการตั้งค่า</h4>
+                            <p class="text-xs text-gray-600 mt-1">Priority: Medium | Estimation: 5 points</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-12 text-center">
+                <div class="bg-white rounded-2xl p-8 shadow-sm">
+                    <h3 class="thai-font text-2xl font-semibold mb-6" style="color: var(--color-neutral-900);">
+                        Development Summary
+                    </h3>
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+                        <div>
+                            <div class="text-3xl font-bold text-green-600">16</div>
+                            <div class="text-sm text-gray-600">Total User Stories</div>
+                        </div>
+                        <div>
+                            <div class="text-3xl font-bold text-blue-600">89</div>
+                            <div class="text-sm text-gray-600">Total Story Points</div>
+                        </div>
+                        <div>
+                            <div class="text-3xl font-bold text-orange-600">4</div>
+                            <div class="text-sm text-gray-600">User Roles</div>
+                        </div>
+                        <div>
+                            <div class="text-3xl font-bold text-purple-600">100%</div>
+                            <div class="text-sm text-gray-600">Coverage</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Download Section -->
+    <section id="deliverables" class="py-20 bg-white">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h2 class="thai-font text-4xl font-bold mb-6" style="color: var(--color-neutral-900);">
+                Download Deliverables
+            </h2>
+            <p class="text-xl text-gray-600 mb-12">
+                ดาวน์โหลดไฟล์ทั้งหมดสำหรับการพัฒนาและการออกแบบต่อ
+            </p>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Design System Files -->
+                <div class="bg-gradient-to-br from-green-50 to-green-100 rounded-2xl p-8">
+                    <i class="fas fa-palette text-4xl mb-4" style="color: var(--color-primary);"></i>
+                    <h3 class="thai-font text-xl font-semibold mb-4">Design System</h3>
+                    <div class="space-y-3">
+                        <a href="delivery-app-design-system.md" download
+                           class="download-btn text-white px-6 py-3 rounded-lg inline-flex items-center space-x-2">
+                            <i class="fas fa-download"></i>
+                            <span>Design System Spec</span>
+                        </a>
+                        <a href="design-tokens.json" download
+                           class="bg-gray-800 text-white px-6 py-3 rounded-lg inline-flex items-center space-x-2 hover:bg-gray-700 transition-colors">
+                            <i class="fas fa-code"></i>
+                            <span>Design Tokens (JSON)</span>
+                        </a>
+                        <a href="design-tokens.css" download
+                           class="bg-blue-600 text-white px-6 py-3 rounded-lg inline-flex items-center space-x-2 hover:bg-blue-500 transition-colors">
+                            <i class="fab fa-css3-alt"></i>
+                            <span>CSS Variables</span>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Development Files -->
+                <div class="bg-gradient-to-br from-orange-50 to-orange-100 rounded-2xl p-8">
+                    <i class="fas fa-clipboard-list text-4xl mb-4" style="color: var(--color-secondary);"></i>
+                    <h3 class="thai-font text-xl font-semibold mb-4">Development Spec</h3>
+                    <div class="space-y-3">
+                        <a href="user-stories.md" download
+                           class="download-btn text-white px-6 py-3 rounded-lg inline-flex items-center space-x-2">
+                            <i class="fas fa-download"></i>
+                            <span>User Stories</span>
+                        </a>
+                        <div class="bg-gray-100 rounded-lg p-4 text-sm text-gray-600">
+                            <i class="fas fa-info-circle mr-2"></i>
+                            ครบถ้วนพร้อม Acceptance Criteria สำหรับทีม Dev
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-12 bg-gray-50 rounded-2xl p-8">
+                <h3 class="thai-font text-2xl font-semibold mb-6" style="color: var(--color-neutral-900);">
+                    สรุปผลงานทั้งหมด
+                </h3>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+                    <div class="text-center">
+                        <div class="text-2xl font-bold text-green-600 mb-2">✅</div>
+                        <div class="text-sm font-medium">Design System</div>
+                        <div class="text-xs text-gray-600">Complete with tokens</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-2xl font-bold text-blue-600 mb-2">✅</div>
+                        <div class="text-sm font-medium">Hi-fi Mockups</div>
+                        <div class="text-xs text-gray-600">4 Roles covered</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-2xl font-bold text-orange-600 mb-2">✅</div>
+                        <div class="text-sm font-medium">User Flows</div>
+                        <div class="text-xs text-gray-600">Wireframe prototypes</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-2xl font-bold text-purple-600 mb-2">✅</div>
+                        <div class="text-sm font-medium">User Stories</div>
+                        <div class="text-xs text-gray-600">Ready for development</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <div class="flex items-center justify-center space-x-3 mb-6">
+                <i class="fas fa-utensils text-2xl" style="color: var(--color-primary);"></i>
+                <span class="thai-font font-bold text-xl">Delivery App Design System</span>
+            </div>
+            <p class="text-gray-400 mb-6">
+                ระบบออกแบบครบวงจรสำหรับแอปเดลิเวอรี่ 4 บทบาท
+                <br>พร้อมสำหรับการพัฒนาและการออกแบบต่อ
+            </p>
+            <div class="flex justify-center space-x-6 mb-8">
+                <div class="text-center">
+                    <div class="text-2xl font-bold text-green-400">4</div>
+                    <div class="text-xs text-gray-400">User Roles</div>
+                </div>
+                <div class="text-center">
+                    <div class="text-2xl font-bold text-blue-400">16</div>
+                    <div class="text-xs text-gray-400">User Stories</div>
+                </div>
+                <div class="text-center">
+                    <div class="text-2xl font-bold text-orange-400">89</div>
+                    <div class="text-xs text-gray-400">Story Points</div>
+                </div>
+                <div class="text-center">
+                    <div class="text-2xl font-bold text-purple-400">100%</div>
+                    <div class="text-xs text-gray-400">Complete</div>
+                </div>
+            </div>
+            <div class="border-t border-gray-700 pt-6">
+                <p class="text-sm text-gray-500">
+                    สร้างด้วยความใส่ใจในการออกแบบ UX/UI สำหรับแอปเดลิเวอรี่ครบวงจร
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Add active class to navigation links
+        window.addEventListener('scroll', function() {
+            const sections = document.querySelectorAll('section[id]');
+            const navLinks = document.querySelectorAll('.nav-link');
+
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.clientHeight;
+                if (scrollY >= sectionTop - 200) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === '#' + current) {
+                    link.classList.add('active');
+                }
+            });
+        });
+
+        // Add intersection observer for animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver(function(entries) {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        // Observe all cards for animation
+        document.querySelectorAll('.card-hover, .mockup-container').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(20px)';
+            el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            observer.observe(el);
+        });
+    </script>
+</body>
+</html>

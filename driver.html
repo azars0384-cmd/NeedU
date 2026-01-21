@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Driver App - Food Delivery</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Prompt:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { font-family: 'Inter', 'Prompt', sans-serif; background-color: #F8FAFC; }
+        .thai-font { font-family: 'Prompt', sans-serif; }
+    </style>
+</head>
+<body class="bg-gray-100 pb-20">
+    <!-- Navbar -->
+    <nav class="bg-blue-600 shadow-lg sticky top-0 z-50 text-white">
+        <div class="max-w-md mx-auto px-4">
+            <div class="flex justify-between items-center h-16">
+                <div class="font-bold text-xl thai-font">
+                    <i class="fas fa-motorcycle mr-2"></i> Driver App
+                </div>
+                <div class="flex items-center space-x-2 bg-blue-700 px-3 py-1 rounded-full text-xs">
+                    <div class="w-2 h-2 bg-green-400 rounded-full"></div>
+                    <span>ออนไลน์</span>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="max-w-md mx-auto px-4 py-4 space-y-4">
+
+        <!-- Dashboard/Earnings -->
+        <div class="bg-white rounded-xl p-4 shadow-sm flex justify-between items-center">
+            <div>
+                <p class="text-xs text-gray-500 font-bold uppercase">รายได้วันนี้</p>
+                <h3 id="driver-revenue" class="text-2xl font-bold text-gray-800">฿0</h3>
+            </div>
+            <div>
+                <p class="text-xs text-gray-500 font-bold uppercase">งานที่ทำเสร็จ</p>
+                <h3 id="driver-jobs" class="text-2xl font-bold text-blue-600 text-right">0</h3>
+            </div>
+        </div>
+
+        <!-- Current Job (If any) -->
+        <div id="current-job-container">
+            <!-- Loaded via JS -->
+        </div>
+
+        <!-- Available Jobs -->
+        <div>
+            <h2 class="text-lg font-bold thai-font text-gray-800 mb-3 flex items-center">
+                งานใหม่ <span id="new-jobs-count" class="ml-2 bg-red-500 text-white text-xs px-2 py-0.5 rounded-full">0</span>
+            </h2>
+            <div id="available-jobs-container" class="space-y-3">
+                <!-- Loaded via JS -->
+                <div class="text-center text-gray-500 py-8">กำลังค้นหางาน...</div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/store.js"></script>
+    <script src="js/driver.js"></script>
+</body>
+</html>

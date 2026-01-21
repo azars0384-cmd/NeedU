@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Merchant App - Food Delivery</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Prompt:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { font-family: 'Inter', 'Prompt', sans-serif; background-color: #F8FAFC; }
+        .thai-font { font-family: 'Prompt', sans-serif; }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Navbar -->
+    <nav class="bg-white shadow-sm sticky top-0 z-50">
+        <div class="max-w-4xl mx-auto px-4">
+            <div class="flex justify-between items-center h-16">
+                <div class="font-bold text-xl text-orange-600 thai-font flex items-center">
+                    <i class="fas fa-store mr-2"></i> Merchant App
+                </div>
+                <div class="flex items-center space-x-2">
+                    <span class="text-sm text-gray-500 hidden sm:inline">ร้านค้า:</span>
+                    <select id="restaurant-selector" class="border-gray-300 border rounded-lg text-sm px-2 py-1 focus:ring-orange-500 focus:border-orange-500">
+                        <!-- Options loaded via JS -->
+                    </select>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="max-w-4xl mx-auto px-4 py-8">
+        <!-- Stats -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+            <div class="bg-white p-4 rounded-xl shadow-sm border border-orange-100">
+                <p class="text-gray-500 text-xs uppercase font-bold mb-1">ออร์เดอร์ใหม่</p>
+                <h3 id="stat-new" class="text-2xl font-bold text-orange-600">0</h3>
+            </div>
+            <div class="bg-white p-4 rounded-xl shadow-sm border border-blue-100">
+                <p class="text-gray-500 text-xs uppercase font-bold mb-1">กำลังทำ</p>
+                <h3 id="stat-preparing" class="text-2xl font-bold text-blue-600">0</h3>
+            </div>
+            <div class="bg-white p-4 rounded-xl shadow-sm border border-green-100">
+                <p class="text-gray-500 text-xs uppercase font-bold mb-1">พร้อมส่ง</p>
+                <h3 id="stat-ready" class="text-2xl font-bold text-green-600">0</h3>
+            </div>
+            <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100">
+                <p class="text-gray-500 text-xs uppercase font-bold mb-1">รายได้วันนี้</p>
+                <h3 id="stat-revenue" class="text-2xl font-bold text-gray-800">฿0</h3>
+            </div>
+        </div>
+
+        <!-- Orders List -->
+        <div class="bg-white rounded-2xl shadow-sm overflow-hidden">
+            <div class="border-b px-6 py-4 bg-gray-50 flex justify-between items-center">
+                <h2 class="text-lg font-bold thai-font text-gray-800">จัดการออร์เดอร์</h2>
+                <button onclick="renderOrders()" class="text-sm text-gray-500 hover:text-orange-600">
+                    <i class="fas fa-sync-alt mr-1"></i> รีเฟรช
+                </button>
+            </div>
+
+            <div id="orders-container" class="divide-y divide-gray-100">
+                <!-- Orders -->
+                <div class="p-8 text-center text-gray-500">กำลังโหลด...</div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/store.js"></script>
+    <script src="js/merchant.js"></script>
+</body>
+</html>

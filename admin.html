@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Food Delivery</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Prompt:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { font-family: 'Inter', 'Prompt', sans-serif; background-color: #F3F4F6; }
+        .thai-font { font-family: 'Prompt', sans-serif; }
+    </style>
+</head>
+<body class="bg-gray-100">
+    <!-- Navbar -->
+    <nav class="bg-gray-900 shadow-lg sticky top-0 z-50 text-white">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="flex justify-between items-center h-16">
+                <div class="font-bold text-xl thai-font flex items-center">
+                    <i class="fas fa-chart-line mr-2 text-purple-500"></i> Admin Dashboard
+                </div>
+                <div class="flex items-center space-x-4">
+                    <span class="text-sm text-gray-400">System Status:</span>
+                    <span class="flex items-center text-green-400 text-sm font-bold">
+                        <div class="w-2 h-2 bg-green-400 rounded-full mr-2"></div> Online
+                    </span>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="max-w-7xl mx-auto px-4 py-8">
+
+        <!-- Stats Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+            <div class="bg-white rounded-xl p-6 shadow-sm border-l-4 border-purple-500">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <p class="text-xs text-gray-500 font-bold uppercase mb-1">Total Orders</p>
+                        <h3 id="total-orders" class="text-3xl font-bold text-gray-900">0</h3>
+                    </div>
+                    <div class="bg-purple-100 p-3 rounded-lg text-purple-600">
+                        <i class="fas fa-shopping-bag text-xl"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-xl p-6 shadow-sm border-l-4 border-green-500">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <p class="text-xs text-gray-500 font-bold uppercase mb-1">Total Revenue</p>
+                        <h3 id="total-revenue" class="text-3xl font-bold text-gray-900">฿0</h3>
+                    </div>
+                    <div class="bg-green-100 p-3 rounded-lg text-green-600">
+                        <i class="fas fa-money-bill-wave text-xl"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-xl p-6 shadow-sm border-l-4 border-blue-500">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <p class="text-xs text-gray-500 font-bold uppercase mb-1">Completed</p>
+                        <h3 id="completed-orders" class="text-3xl font-bold text-gray-900">0</h3>
+                    </div>
+                    <div class="bg-blue-100 p-3 rounded-lg text-blue-600">
+                        <i class="fas fa-check-circle text-xl"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-xl p-6 shadow-sm border-l-4 border-orange-500">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <p class="text-xs text-gray-500 font-bold uppercase mb-1">Active Now</p>
+                        <h3 id="active-orders" class="text-3xl font-bold text-gray-900">0</h3>
+                    </div>
+                    <div class="bg-orange-100 p-3 rounded-lg text-orange-600">
+                        <i class="fas fa-clock text-xl"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- Recent Orders Table -->
+            <div class="lg:col-span-2 bg-white rounded-xl shadow-sm overflow-hidden">
+                <div class="px-6 py-4 border-b flex justify-between items-center">
+                    <h2 class="font-bold text-gray-800 thai-font">Recent Orders</h2>
+                    <button onclick="renderDashboard()" class="text-sm text-blue-600 hover:text-blue-800">
+                        Refresh
+                    </button>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-sm text-left text-gray-500">
+                        <thead class="text-xs text-gray-700 uppercase bg-gray-50">
+                            <tr>
+                                <th scope="col" class="px-6 py-3">Order ID</th>
+                                <th scope="col" class="px-6 py-3">Customer</th>
+                                <th scope="col" class="px-6 py-3">Restaurant</th>
+                                <th scope="col" class="px-6 py-3">Amount</th>
+                                <th scope="col" class="px-6 py-3">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="orders-table-body">
+                            <!-- Rows -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Activity Feed -->
+            <div class="bg-white rounded-xl shadow-sm p-6">
+                <h2 class="font-bold text-gray-800 thai-font mb-4">System Activity</h2>
+                <div id="activity-feed" class="space-y-4">
+                    <!-- Activities -->
+                    <div class="text-center text-gray-400 text-sm">No recent activity</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/store.js"></script>
+    <script src="js/admin.js"></script>
+</body>
+</html>

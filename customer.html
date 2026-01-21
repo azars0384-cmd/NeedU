@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer App - Food Delivery</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Prompt:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { font-family: 'Inter', 'Prompt', sans-serif; background-color: #F8FAFC; }
+        .thai-font { font-family: 'Prompt', sans-serif; }
+    </style>
+</head>
+<body class="pb-20">
+    <!-- Navbar -->
+    <nav class="bg-white shadow-sm sticky top-0 z-50">
+        <div class="max-w-md mx-auto px-4">
+            <div class="flex justify-between items-center h-16">
+                <div class="font-bold text-xl text-green-600 thai-font">
+                    <i class="fas fa-utensils mr-2"></i>Delivery App
+                </div>
+                <div class="relative cursor-pointer" onclick="toggleCart()">
+                    <i class="fas fa-shopping-cart text-gray-600 text-xl"></i>
+                    <span id="cart-badge" class="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center hidden">0</span>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="max-w-md mx-auto px-4 py-6">
+        <!-- Restaurant List View -->
+        <div id="restaurant-list-view">
+            <h2 class="text-2xl font-bold mb-6 thai-font text-gray-800">เลือกร้านอาหาร</h2>
+            <div id="restaurants-container" class="space-y-6">
+                <!-- Restaurants will be loaded here -->
+            </div>
+        </div>
+
+        <!-- Menu View (Hidden by default) -->
+        <div id="menu-view" class="hidden">
+            <button onclick="showRestaurantList()" class="mb-4 text-gray-600 hover:text-green-600 flex items-center">
+                <i class="fas fa-arrow-left mr-2"></i> กลับ
+            </button>
+            <div id="selected-restaurant-info" class="mb-6">
+                <!-- Restaurant Info -->
+            </div>
+            <h3 class="text-xl font-bold mb-4 thai-font">เมนูอาหาร</h3>
+            <div id="menu-container" class="space-y-4">
+                <!-- Menu items will be loaded here -->
+            </div>
+        </div>
+
+        <!-- Order Tracking View (Hidden by default) -->
+        <div id="orders-view" class="hidden">
+            <h2 class="text-2xl font-bold mb-6 thai-font text-gray-800">ออร์เดอร์ของฉัน</h2>
+            <div id="active-orders-container" class="space-y-4">
+                <!-- Active orders will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Bottom Navigation -->
+    <div class="fixed bottom-0 left-0 right-0 bg-white shadow-[0_-2px_10px_rgba(0,0,0,0.05)] border-t z-50">
+        <div class="max-w-md mx-auto flex justify-around py-3">
+            <button onclick="showRestaurantList()" class="flex flex-col items-center text-green-600 w-1/2">
+                <i class="fas fa-home text-xl mb-1"></i>
+                <span class="text-xs">หน้าแรก</span>
+            </button>
+            <button onclick="showOrders()" class="flex flex-col items-center text-gray-400 hover:text-green-600 w-1/2">
+                <i class="fas fa-receipt text-xl mb-1"></i>
+                <span class="text-xs">ออร์เดอร์</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Cart Modal -->
+    <div id="cart-modal" class="fixed inset-0 bg-black bg-opacity-50 z-[60] hidden flex items-end sm:items-center justify-center">
+        <div class="bg-white w-full max-w-md rounded-t-2xl sm:rounded-2xl p-6 h-[80vh] flex flex-col">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-xl font-bold thai-font">ตะกร้าสินค้า</h3>
+                <button onclick="toggleCart()" class="text-gray-500 hover:text-gray-700">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+            </div>
+
+            <div id="cart-items" class="flex-1 overflow-y-auto space-y-4 mb-4">
+                <!-- Cart items -->
+                <div class="text-center text-gray-500 mt-10">ตะกร้าว่างเปล่า</div>
+            </div>
+
+            <div class="border-t pt-4">
+                <div class="flex justify-between items-center mb-4 text-lg font-bold">
+                    <span>ยอดรวม</span>
+                    <span id="cart-total">฿0</span>
+                </div>
+                <button onclick="checkout()" id="checkout-btn" class="w-full bg-green-500 text-white py-4 rounded-xl font-bold shadow-lg hover:bg-green-600 transition-all disabled:opacity-50 disabled:cursor-not-allowed" disabled>
+                    สั่งอาหาร
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Order Success Modal -->
+    <div id="success-modal" class="fixed inset-0 bg-black bg-opacity-50 z-[70] hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl p-8 max-w-sm w-full text-center">
+            <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <i class="fas fa-check text-green-500 text-3xl"></i>
+            </div>
+            <h3 class="text-xl font-bold mb-2 thai-font">สั่งอาหารสำเร็จ!</h3>
+            <p class="text-gray-600 mb-6">ร้านค้าได้รับออร์เดอร์ของคุณแล้ว</p>
+            <button onclick="closeSuccessModal()" class="w-full bg-green-500 text-white py-3 rounded-xl font-bold">
+                ดูสถานะออร์เดอร์
+            </button>
+        </div>
+    </div>
+
+    <script src="js/store.js"></script>
+    <script src="js/customer.js"></script>
+</body>
+</html>
