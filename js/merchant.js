@@ -38,8 +38,9 @@ function renderOrders() {
     const newOrders = orders.filter(o => o.status === 'PENDING').length;
     const preparingOrders = orders.filter(o => ['CONFIRMED', 'PREPARING'].includes(o.status)).length;
     const readyOrders = orders.filter(o => o.status === 'READY').length;
+    const today = new Date().toDateString();
     const todayRevenue = orders
-        .filter(o => o.status === 'DELIVERED') // In a real app check date too
+        .filter(o => o.status === 'DELIVERED' && new Date(o.createdAt).toDateString() === today)
         .reduce((sum, o) => sum + o.totalPrice, 0);
 
     statNew.textContent = newOrders;
