@@ -29,7 +29,11 @@ function renderDashboard() {
     activeOrdersEl.textContent = activeOrders;
 
     // Table (Latest 10)
-    const sortedOrders = [...orders].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+    const sortedOrders = [...orders].sort((a, b) => {
+        if (b.createdAt > a.createdAt) return 1;
+        if (b.createdAt < a.createdAt) return -1;
+        return 0;
+    });
     const recentOrders = sortedOrders.slice(0, 10);
 
     if (recentOrders.length === 0) {
