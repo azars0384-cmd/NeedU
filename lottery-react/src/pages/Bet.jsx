@@ -1,25 +1,23 @@
 import React, { useEffect, useState } from 'react';
-import { useLocation } from 'react-router-dom';
-import { getLotteryTypes, placeBet, getUserBetHistory } from '../services/api';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { getLotteryTypes, placeBet } from '../services/api';
 import Loader from '../components/Loader';
-import Modal from '../components/Modal';
 import { formatCurrency } from '../utils/format';
 
 const Bet = () => {
   const location = useLocation();
+  const navigate = useNavigate();
   const [view, setView] = useState(location.state?.lotteryId ? 'detail' : 'list');
   const [lotteries, setLotteries] = useState([]);
   const [selectedLotto, setSelectedLotto] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [history, setHistory] = useState([]);
-  const [showHistory, setShowHistory] = useState(false);
 
   // Betting State
   const [tab, setTab] = useState('two'); // two, three, set
   const [betOption, setBetOption] = useState(null);
   const [number, setNumber] = useState('');
   const [slip, setSlip] = useState([]);
-  const [timeLeft, setTimeLeft] = useState(null);
+  const [countdown, setCountdown] = useState(null);
 
   useEffect(() => {
     fetchLotteries();
@@ -33,13 +31,24 @@ const Bet = () => {
   }, [location.state, lotteries]);
 
   useEffect(() => {
-    if (selectedLotto) {
-        // Start Timer logic here (simplified)
-        const timer = setInterval(() => {
-            // Check closed time vs now
-        }, 1000);
-        return () => clearInterval(timer);
+    let timer;
+    if (selectedLotto && selectedLotto.rawClose) {
+      const target = new Date(selectedLotto.rawClose).getTime();
+      timer = setInterval(() => {
+        const now = new Date().getTime();
+        const dist = target - now;
+        if (dist < 0) {
+            setCountdown("ปิดรับแทง");
+            clearInterval(timer);
+        } else {
+            const h = Math.floor((dist % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const m = Math.floor((dist % (1000 * 60 * 60)) / (1000 * 60));
+            const s = Math.floor((dist % (1000 * 60)) / 1000);
+            setCountdown(`${h}:${m}:${s}`);
+        }
+      }, 1000);
     }
+    return () => clearInterval(timer);
   }, [selectedLotto]);
 
   const fetchLotteries = async () => {
@@ -65,22 +74,23 @@ const Bet = () => {
       const newNum = number + key;
       setNumber(newNum);
       if (newNum.length === limit) {
-        setTimeout(() => addBetToSlip(newNum), 200);
+        // Auto add logic if option selected, otherwise just wait
+        if (betOption) {
+            setTimeout(() => addBetToSlip(newNum), 200);
+        }
       }
     }
   };
 
   const addBetToSlip = (num) => {
     if (!betOption) return;
-    if (slip.some(s => s.number === num && s.option === betOption)) {
-        // Already exists
-        return;
-    }
+    if (slip.some(s => s.number === num && s.option === betOption)) return;
+
     const newBet = {
         id: Date.now(),
         number: num,
         option: betOption,
-        amount: tab === 'set' ? 120 : 5 // Default amount
+        amount: tab === 'set' ? 120 : 5
     };
     setSlip([...slip, newBet]);
     setNumber('');
@@ -104,19 +114,16 @@ const Bet = () => {
     setLoading(false);
 
     if (res.success) {
-        // Update local user balance
         const newUser = { ...user, balance: res.data.newBalance };
         localStorage.setItem('th_lotto_user', JSON.stringify(newUser));
-        // Reset
         setSlip([]);
-        // Show success modal (mock)
         alert('ส่งโพยสำเร็จ!');
+        navigate('/bet-history');
     } else {
         alert(res.error || 'ส่งโพยไม่สำเร็จ');
     }
   };
 
-  // --- Render Helpers ---
   const renderKeypad = () => {
     const keys = ['1','2','3','4','5','6','7','8','9','del','0',''];
     return (
@@ -142,7 +149,7 @@ const Bet = () => {
         <div className="pb-20 p-4">
             <div className="flex justify-between items-center mb-4">
                 <h1 className="text-2xl font-bold text-brand-dark">แทงหวย</h1>
-                <button onClick={() => { setShowHistory(true); fetchBetHistory(); }} className="px-3 py-1.5 bg-white border border-green-200 rounded-lg text-xs font-bold text-brand-primary shadow-sm">
+                <button onClick={() => navigate('/bet-history')} className="px-3 py-1.5 bg-white border border-green-200 rounded-lg text-xs font-bold text-brand-primary shadow-sm">
                     <i className="fas fa-receipt mr-1"></i> โพยของฉัน
                 </button>
             </div>
@@ -180,7 +187,6 @@ const Bet = () => {
     );
   }
 
-  // Detail View
   return (
     <div className="pb-20 bg-gray-50 min-h-screen">
         <div className="bg-brand-primary p-4 text-white sticky top-0 z-30 shadow-md flex items-center gap-3">
@@ -189,6 +195,21 @@ const Bet = () => {
         </div>
 
         <div className="p-4 space-y-4">
+            {/* Live & Timer */}
+            <div className="bg-white rounded-xl p-4 shadow-sm">
+                <div className="flex justify-between items-center mb-2">
+                    <h3 className="font-bold text-gray-800">ปิดรับใน:</h3>
+                    <div className="text-2xl font-mono font-bold text-red-500 bg-red-50 px-3 rounded-lg">
+                        {countdown || '--:--:--'}
+                    </div>
+                </div>
+                {selectedLotto['ลิงก์วิดีโอ'] && (
+                    <div className="aspect-video bg-black rounded-lg overflow-hidden mt-3">
+                        <iframe src={selectedLotto['ลิงก์วิดีโอ']} className="w-full h-full" frameBorder="0" allowFullScreen></iframe>
+                    </div>
+                )}
+            </div>
+
             {/* Tabs */}
             <div className="bg-white p-1 rounded-xl shadow-sm flex">
                 {['two', 'three', 'set'].map(t => (
@@ -206,12 +227,12 @@ const Bet = () => {
             <div className="bg-white p-4 rounded-xl shadow-sm grid grid-cols-2 gap-3">
                 {tab === 'two' && ['สองตัวบน', 'สองตัวล่าง'].map(opt => (
                     <button key={opt} onClick={() => setBetOption(opt)} className={`border py-2 rounded-lg text-sm font-bold ${betOption === opt ? 'bg-brand-primary text-white border-brand-primary' : 'bg-white text-gray-600'}`}>
-                        {opt}
+                        {opt} <span className="text-[10px] text-gray-400 block font-light">บาทละ {selectedLotto[`อัตราจ่าย_${opt.replace(/ /g,'')}`] || 90}</span>
                     </button>
                 ))}
                 {tab === 'three' && ['สามตัวบน', 'สามตัวโต๊ด', 'สามตัวล่าง'].map(opt => (
                     <button key={opt} onClick={() => setBetOption(opt)} className={`border py-2 rounded-lg text-sm font-bold ${betOption === opt ? 'bg-brand-primary text-white border-brand-primary' : 'bg-white text-gray-600'}`}>
-                        {opt}
+                        {opt} <span className="text-[10px] text-gray-400 block font-light">บาทละ {selectedLotto[`อัตราจ่าย_${opt.replace(/ /g,'')}`] || 900}</span>
                     </button>
                 ))}
                 {tab === 'set' && <div className="col-span-2 text-center p-4 bg-gray-50 rounded-lg">หวยชุด 4 ตัว (ลุ้นรางวัลใหญ่)</div>}

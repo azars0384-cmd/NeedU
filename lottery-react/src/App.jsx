@@ -1,15 +1,17 @@
-// Update App.jsx with Admin Routes
 import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import Home from './pages/Home';
 import Bet from './pages/Bet';
+import BetHistory from './pages/BetHistory';
 import Wallet from './pages/Wallet';
 import Profile from './pages/Profile';
 import Results from './pages/Results';
 import Layout from './components/Layout';
 import AuthGuard from './components/AuthGuard';
+import LuckyWheel from './components/LuckyWheel';
+import Announcement from './components/Announcement';
 
 // Admin Imports
 import AdminLogin from './pages/admin/AdminLogin';
@@ -46,14 +48,14 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        {/* User Routes */}
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
 
         <Route element={<AuthGuard role="user" />}>
-          <Route path="/" element={<Layout><Home /></Layout>} />
-          <Route path="/home" element={<Layout><Home /></Layout>} />
+          <Route path="/" element={<><Layout><Home /></Layout><LuckyWheel /><Announcement /></>} />
+          <Route path="/home" element={<><Layout><Home /></Layout><LuckyWheel /><Announcement /></>} />
           <Route path="/bet" element={<Layout><Bet /></Layout>} />
+          <Route path="/bet-history" element={<Layout><BetHistory /></Layout>} />
           <Route path="/wallet" element={<Layout><Wallet /></Layout>} />
           <Route path="/profile" element={<Layout><Profile /></Layout>} />
           <Route path="/results" element={<Layout><Results /></Layout>} />

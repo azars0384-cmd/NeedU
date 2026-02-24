@@ -1,14 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { getWalletPageData, createTransaction, updateTransactionDetails, getSystemBankDetails } from '../services/api';
 import Loader from '../components/Loader';
-import Modal from '../components/Modal';
 import { formatCurrency } from '../utils/format';
 
 const IMGBB_API_KEY = '8e158836403df86adce925f6108ebea0';
 
 const Wallet = () => {
   const [data, setData] = useState(null);
-  const [view, setView] = useState('main'); // main, deposit_amount, deposit_qr, deposit_upload, withdraw
+  const [view, setView] = useState('main'); // main, deposit_amount, deposit_qr, deposit_upload, deposit_bank, withdraw, history
   const [amount, setAmount] = useState('0');
   const [loading, setLoading] = useState(true);
   const [systemBank, setSystemBank] = useState(null);
@@ -51,12 +50,12 @@ const Wallet = () => {
 
     setLoading(true);
     const user = JSON.parse(localStorage.getItem('th_lotto_user'));
-    // Create 'pending' transaction first
     const res = await createTransaction({ userId: user.userId, type: 'deposit', amount: val });
     setLoading(false);
 
     if (res.success) {
       setCurrentTxId(res.transactionId);
+      // Logic to choose QR or Bank View (defaulting to QR for now)
       setView('deposit_qr');
     } else {
       alert(res.error);
@@ -77,7 +76,6 @@ const Wallet = () => {
     if (!file || !transferTime) return alert('กรุณาแนบสลิปและระบุเวลา');
 
     setLoading(true);
-    // 1. Upload to ImgBB
     const formData = new FormData();
     formData.append('image', file);
 
@@ -89,7 +87,6 @@ const Wallet = () => {
       const imgData = await imgRes.json();
 
       if (imgData.success) {
-        // 2. Update Transaction
         const updateRes = await updateTransactionDetails({
           transactionId: currentTxId,
           slipUrl: imgData.data.url,
@@ -132,8 +129,35 @@ const Wallet = () => {
 
   if (loading) return <Loader />;
 
-  // --- Views ---
+  // --- View: History ---
+  if (view === 'history') {
+    return (
+        <div className="pb-20">
+            <button onClick={() => setView('main')} className="mb-4 text-gray-500"><i className="fas fa-arrow-left"></i> กลับ</button>
+            <h1 className="text-2xl font-bold text-brand-dark mb-4">ประวัติธุรกรรม</h1>
+            <div className="space-y-3">
+                {data?.history?.map((h, i) => (
+                    <div key={i} className="bg-white p-3 rounded-lg shadow-sm border border-gray-100 flex justify-between items-center">
+                        <div>
+                            <p className="font-bold text-sm text-gray-800">{h.type === 'deposit' ? 'ฝากเงิน' : (h.type === 'withdraw' ? 'ถอนเงิน' : 'อื่นๆ')}</p>
+                            <p className="text-[10px] text-gray-400">{h.time}</p>
+                        </div>
+                        <div className="text-right">
+                            <p className={`font-bold ${h.type === 'deposit' ? 'text-green-600' : 'text-red-600'}`}>
+                                {h.type === 'deposit' ? '+' : '-'}{formatCurrency(h.amount)}
+                            </p>
+                            <span className={`text-[10px] px-2 py-0.5 rounded-full ${h.status === 'completed' ? 'bg-green-50 text-green-600' : 'bg-yellow-50 text-yellow-600'}`}>
+                                {h.status}
+                            </span>
+                        </div>
+                    </div>
+                ))}
+            </div>
+        </div>
+    );
+  }
 
+  // --- View: Main ---
   if (view === 'main') {
     return (
       <div className="space-y-6 pb-20">
@@ -151,10 +175,26 @@ const Wallet = () => {
             </div>
         </div>
 
+        {/* Menu Grid */}
+        <div className="grid grid-cols-3 gap-3">
+            <button onClick={startDeposit} className="bg-white p-4 rounded-xl shadow-sm border border-gray-100 flex flex-col items-center gap-2 hover:bg-gray-50">
+                <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center text-green-600"><i className="fas fa-wallet"></i></div>
+                <span className="text-xs font-bold text-gray-700">ฝากเงิน</span>
+            </button>
+            <button onClick={() => { setView('withdraw'); setAmount('0'); }} className="bg-white p-4 rounded-xl shadow-sm border border-gray-100 flex flex-col items-center gap-2 hover:bg-gray-50">
+                <div className="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center text-red-600"><i className="fas fa-hand-holding-usd"></i></div>
+                <span className="text-xs font-bold text-gray-700">ถอนเงิน</span>
+            </button>
+            <button onClick={() => setView('history')} className="bg-white p-4 rounded-xl shadow-sm border border-gray-100 flex flex-col items-center gap-2 hover:bg-gray-50">
+                <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center text-blue-600"><i className="fas fa-history"></i></div>
+                <span className="text-xs font-bold text-gray-700">ประวัติ</span>
+            </button>
+        </div>
+
         <div className="bg-white rounded-xl p-4 shadow-sm">
-            <h3 className="font-bold text-brand-dark mb-4 border-l-4 border-brand-primary pl-2">ประวัติล่าสุด</h3>
+            <h3 className="font-bold text-brand-dark mb-4 border-l-4 border-brand-primary pl-2">ธุรกรรมล่าสุด</h3>
             <div className="space-y-3">
-                {data?.history?.length > 0 ? data.history.map((h, i) => (
+                {data?.history?.slice(0,5).map((h, i) => (
                     <div key={i} className="flex justify-between items-center border-b border-gray-50 pb-2 last:border-0">
                         <div className="flex items-center gap-3">
                             <div className={`w-10 h-10 rounded-full flex items-center justify-center ${h.type === 'deposit' ? 'bg-green-100 text-green-600' : 'bg-red-100 text-red-600'}`}>
@@ -174,14 +214,14 @@ const Wallet = () => {
                             </span>
                         </div>
                     </div>
-                )) : <p className="text-center text-gray-400 text-xs">ไม่มีรายการ</p>}
+                ))}
             </div>
         </div>
       </div>
     );
   }
 
-  // Common Keypad Layout for Deposit/Withdraw Amount
+  // --- View: Amount Input ---
   if (view === 'deposit_amount' || view === 'withdraw') {
     return (
         <div className="pb-20">
@@ -211,6 +251,7 @@ const Wallet = () => {
     );
   }
 
+  // --- View: QR Scan ---
   if (view === 'deposit_qr') {
     return (
         <div className="pb-20 p-4">
@@ -231,12 +272,8 @@ const Wallet = () => {
                 <p className="text-xs text-gray-500">{systemBank?.bankName} - {systemBank?.promptpay}</p>
 
                 <div className="mt-6 flex flex-col gap-2">
-                    <button
-                        onClick={() => setView('deposit_upload')}
-                        className="w-full bg-brand-primary text-white font-bold py-3 rounded-xl"
-                    >
-                        แจ้งโอนเงิน / อัพโหลดสลิป
-                    </button>
+                    <button onClick={() => setView('deposit_upload')} className="w-full bg-brand-primary text-white font-bold py-3 rounded-xl">แจ้งโอนเงิน / อัพโหลดสลิป</button>
+                    <button onClick={() => setView('deposit_bank')} className="w-full bg-gray-100 text-gray-600 font-bold py-3 rounded-xl">โอนผ่านเลขบัญชี</button>
                     <button onClick={() => setView('main')} className="w-full text-gray-500 py-2">ยกเลิก</button>
                 </div>
             </div>
@@ -244,6 +281,25 @@ const Wallet = () => {
     );
   }
 
+  // --- View: Bank Transfer (Fallback) ---
+  if (view === 'deposit_bank') {
+    return (
+        <div className="pb-20 p-4">
+            <button onClick={() => setView('deposit_qr')} className="mb-4 text-gray-500"><i className="fas fa-arrow-left"></i> กลับ</button>
+            <h2 className="text-xl font-bold text-brand-dark text-center mb-4">โอนผ่านเลขบัญชี</h2>
+            <div className="bg-white p-6 rounded-2xl shadow-md text-center">
+                <div className="my-4 p-4 bg-gray-50 rounded-xl">
+                    <p className="text-sm text-gray-500">{systemBank?.bankName}</p>
+                    <h3 className="text-2xl font-bold text-brand-dark my-2">{systemBank?.accountNumber}</h3>
+                    <p className="text-sm text-gray-500">{systemBank?.accountName}</p>
+                </div>
+                <button onClick={() => setView('deposit_upload')} className="w-full bg-brand-primary text-white font-bold py-3 rounded-xl mt-4">แจ้งโอนเงิน</button>
+            </div>
+        </div>
+    );
+  }
+
+  // --- View: Upload Slip ---
   if (view === 'deposit_upload') {
     return (
         <div className="pb-20 p-4">
